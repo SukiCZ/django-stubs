@@ -1,12 +1,16 @@
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, TypeVar, overload
+
+_KT = TypeVar("_KT")
+_VT = TypeVar("_VT")
+_T = TypeVar("_T")
 
 VALID_KEY_CHARS: Any
 
 class CreateError(Exception): ...
 class UpdateError(Exception): ...
 
-class SessionBase(dict[str, Any]):
+class SessionBase(dict[_KT, _VT]):
     TEST_COOKIE_NAME: str
     TEST_COOKIE_VALUE: str
     accessed: bool
@@ -48,3 +52,7 @@ class SessionBase(dict[str, Any]):
     def load(self) -> dict[str, Any]: ...
     @classmethod
     def clear_expired(cls) -> None: ...
+    @overload
+    def pop(self, key: _KT) -> _VT: ...
+    @overload
+    def pop(self, key: _KT, default: _VT | _T = ...) -> _VT | _T: ...
